@@ -11,7 +11,7 @@
 #include "getpointer.h"
 
 void getpointer(FILE *fp){
-	fp=fopen("/Users/monsurul/Documents/uofm/Desktop/qualifying_phd/velocity model/depth.bin","rb");
+	fp=fopen("depth.bin","rb");
 
 	return;
 

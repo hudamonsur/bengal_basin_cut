@@ -36,13 +36,15 @@ int main(){
 	longitude[0] = minlong;
 	x[0] = 0;
 	y[0] = 0;
+	int i;
+	int j;
 
-	for (int i = 1; i<sizex; i++){
+	for (i = 1; i<sizex; i++){
 		x[i] = x[i-1] + dx * 111.01;
 		longitude[i] = longitude[i-1] + dx;
 	}
 
-	for (int i = 1; i<sizey; i++){
+	for (i = 1; i<sizey; i++){
 		y[i] = y[i-1] + dx * 111.01;
 		lattitude[i] = lattitude[i-1] + dx;
 	}
@@ -56,8 +58,8 @@ int main(){
 
 	float * result;
 
-	for(int i = 0; i<sizex; i++){
-		for(int j = 0; j<sizey; j++){
+	for(i = 0; i<sizex; i++){
+		for(j = 0; j<sizey; j++){
 			result = getdepth(lattitude[j], longitude[i], depth);
 			float tempvs = *(result+0);
 			float tempvp = *(result+1);

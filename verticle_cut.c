@@ -33,8 +33,10 @@ int main(){
 
 	float z[ndepthpoints];
 	z[0] = 0;
+	int i;
+	int j;
 
-	for (int i = 1; i<ndepthpoints; i++){
+	for (i = 1; i<ndepthpoints; i++){
 		z[i] = z[i-1] + dz;
 	}
 
@@ -55,12 +57,12 @@ int main(){
 		angle = PI/2;
 	}
 
-	for (int i = 1; i<size; i++){
+	for (i = 1; i<size; i++){
 		dist[i] = dist[i-1]+dx;
 		lattitude[i] = lat1 + dist[i]*(fabs(sin(angle)));
 		longitude[i] = long1 + dist[i]*(fabs(cos(angle)));
 	}
-	for(int j = 0; j<size; j++){
+	for(j = 0; j<size; j++){
 		dist[j] = dist[j]*111.01;
 	}
 
@@ -74,8 +76,8 @@ int main(){
 	//FILE *fp;
 	//fp=fopen("/Users/monsurul/Documents/uofm/Desktop/qualifying_phd/velocity model/depth.bin","rb");
 
-	for(int i = 0; i<ndepthpoints; i++){
-		for(int j = 0; j<size; j++){
+	for(i = 0; i<ndepthpoints; i++){
+		for(j = 0; j<size; j++){
 			result = getdepth(lattitude[j], longitude[j], z[i]);
 			float tempvs = *(result+0);
 			float tempvp = *(result+1);
