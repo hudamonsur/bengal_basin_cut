@@ -10,28 +10,30 @@
 #include<stdlib.h>
 #include<math.h>
 #include "getdepth.h"
+//#include "constants_bengalbasin.h"
+//#include "misc.h"
 //#include "getpointer.h"
 
 #define PI 3.14159265358979323846
 
 int main(){
 
-	float lat1 = 19.9;
-	float lat2 = 27;
-	float long1 = 91;
-	float long2 = 91;
-	float dx = 0.01;
+	double lat1 = 19.9;
+	double lat2 = 27;
+	double long1 = 91;
+	double long2 = 91;
+	double dx = 0.01;
 	int dz = 200;
 	int size;
 	int maxdepth = 50000;
 	int ndepthpoints = maxdepth/dz;
-	float angle;
+	double angle;
 
-	float diflat  = lat2 - lat1;
-	float diflong = long2 - long1;
-	//float *dist = malloc(100*sizeof(float*));
+	double diflat  = lat2 - lat1;
+	double diflong = long2 - long1;
+	//double *dist = malloc(100*sizeof(double*));
 
-	float z[ndepthpoints];
+	double z[ndepthpoints];
 	z[0] = 0;
 	int i;
 	int j;
@@ -40,11 +42,11 @@ int main(){
 		z[i] = z[i-1] + dz;
 	}
 
-	float distance = sqrt(diflat*diflat+diflong*diflong);
+	double distance = sqrt(diflat*diflat+diflong*diflong);
 	size = distance/dx;
-	float longitude[size];
-	float lattitude[size];
-	float dist[size];
+	double longitude[size];
+	double lattitude[size];
+	double dist[size];
 
 	dist[0]=0;
 	lattitude[0]=lat1;
@@ -67,21 +69,21 @@ int main(){
 	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("vertical_cut_along91long_vs.txt", "w");
+	vsPtr = fopen("vertical_cut_along91long_vs1.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("vertical_cut_along91long_vp.txt", "w");
+	vpPtr = fopen("vertical_cut_along91long_vp1.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("vertical_cut_along91long_rho.txt", "w");
-	float * result;
+	rhoPtr = fopen("vertical_cut_along91long_rho1.txt", "w");
+	cvmpayload_t result;
 	//FILE *fp;
 	//fp=fopen("/Users/monsurul/Documents/uofm/Desktop/qualifying_phd/velocity model/depth.bin","rb");
 
 	for(i = 0; i<ndepthpoints; i++){
 		for(j = 0; j<size; j++){
-			result = getdepth(lattitude[j], longitude[j], z[i]);
-			float tempvs = *(result+0);
-			float tempvp = *(result+1);
-			float temprho = *(result+2);
+			getdepth(lattitude[j], longitude[j], z[i], &result);
+			double tempvs = result.Vs;
+			double tempvp = result.Vp;
+			double temprho = result.rho;
 			/* in *(result+0),
 			0 means shear wave velocity;
 			1 means p-wave velocity and
@@ -89,15 +91,18 @@ int main(){
 			fprintf( vsPtr, "%.2f\t%.0f\t%.0f\n", dist[j], z[i], tempvs );
 			fprintf( vpPtr, "%.2f\t%.0f\t%.0f\n", dist[j], z[i], tempvp );
 			fprintf( rhoPtr, "%.2f\t%.0f\t%.0f\n", dist[j], z[i], temprho );
+			break;
 		}
+		printf("%d %d\n", i, ndepthpoints);
+		break;
 	}
 	//fclose(fp);
 	//fclose(filePtr);
 	//fclose(result);
 
-	/*float dif = 0.1;
+	/*double dif = 0.1;
 	int n = diflong/dif;
-	float x[n];
+	double x[n];
 	FILE *stations;
 	stations = fopen("stations along 26 latitude.txt", "w");
 
@@ -105,6 +110,7 @@ int main(){
 		x[i] = long1 + i * dif;
 		fprintf( stations, "%.2f\t%.2f\n", lat1, x[i] );
 	}*/
+	puts("done!!!!!!!!");
 
 }
 

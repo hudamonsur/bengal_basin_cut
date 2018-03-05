@@ -7,8 +7,8 @@
 
 #ifndef GETDEPTH_H_
 #define GETDEPTH_H_
-
-float * getdepth(float inputlat, float inputlong, float inputdepth);
+#include "misc.h"
+int getdepth(double inputlat, double inputlong, double inputdepth, cvmpayload_t* result);
 
 
 #endif /* GETDEPTH_H_ */
