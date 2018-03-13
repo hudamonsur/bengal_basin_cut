@@ -29,55 +29,79 @@ const char * LAYER_NAMES[] = {
     "mantle",
 };
 int LAYER_COUNT = 8;
-layer_params LAYERS[LAYER_COUNT];
+layer_params LAYERS[8];
+double LAYER_MINVS[] = {100, 750, 1050, 1250, 1700, 2250, 3250, 4500};
+double LAYER_MAXVS[] = {500, 1000, 1100, 1650, 2200, 2400, 3500, 6000};
+double LAYER_MINRHO[] = {2000, 2100, 2200, 2350, 2450, 2550, 2670, 3300};
+double LAYER_MAXRHO[] = {2050, 2200, 2350, 2450, 2550, 2600, 2800, 3300};
+double LAYER_VPVSRATIO[] = {2.2, 2.1, 2.1, 2.0, 2.0, 1.9, 1.8, 1.7};
 
-LAYERS[0].minvs = 100; // minimum shear wave velocity of the quaternary sediment in meter/sec
-double SEDMAXVS = 500; // maximum shear wave velocity of the quaternary sediment in meter/sec
-double SEDMINDENSITY = 2000; // minimum density of the quaternary sediment in kg/m3
-double SEDMAXDENSITY = 2050; // maximum density of the quaternary sediment in kg/m3
-double SEDVPVSRATIO = 2.2; // ratio between P-wave and S-wave velocity Dupitila deposit
+void initiate_layers(){
+    int i = 0;
+    for(i=0;i<LAYER_COUNT;i++){
+         LAYERS[i].minvs = LAYER_MINVS[i];
+         LAYERS[i].maxvs = LAYER_MAXVS[i];
+         LAYERS[i].minrho = LAYER_MINRHO[i];
+         LAYERS[i].maxrho = LAYER_MAXRHO[i];
+         LAYERS[i].vpvsratio = LAYER_VPVSRATIO[i];
+    }
+}
 
-double DUPITILAMINVS = 750; // minimum shear wave velocity of the Dupitila deposit in meter/sec
-double DUPITILAMAXVS = 1000; // maximum shear wave velocity of the Dupitila deposit in meter/sec
-double DUPITILAMINDENSITY = 2100; // minimum density of the Dupitila deposit in kg/m3
-double DUPITILAMAXDENSITY = 2200; // maximum density of the Dupitila deposit in kg/m3
-double DUPITILAVPVSRATIO = 2.1; // ratio between P-wave and S-wave velocity of the Dupitila deposit
+void initiate_globals(){
+    initiate_layers();
 
-double TIPAMMINVS = 1050; // minimum shear wave velocity of the Tipam deposit in meter/sec
-double TIPAMMAXVS = 1100; // maximum shear wave velocity of the Tipam deposit in meter/sec
-double TIPAMMINDENSITY = 2200; // minimum density of the Tipam deposit in kg/m3
-double TIPAMMAXDENSITY = 2350; // maximum density of the Tipam deposit in kg/m3
-double TIPAMVPVSRATIO = 2.1; // ratio between P-wave and S-wave velocity of the Tipam deposit
 
-double BOKABILMINVS = 1250; // minimum shear wave velocity of the Bokabil deposit in meter/sec
-double BOKABILMAXVS = 1650; // maximum shear wave velocity of the Bokabil deposit in meter/sec
-double BOKABILMINDENSITY = 2350; // minimum density of the Bokabil deposit in kg/m3
-double BOKABILMAXDENSITY = 2450; // maximum density of the Bokabil deposit in kg/m3
-double BOKABILVPVSRATIO = 2.0; // ratio between P-wave and S-wave velocity of the Bokabil deposit
+}
 
-double BHUBANMINVS = 1700; // minimum shear wave velocity of the Bhuban deposit in meter/sec
-double BHUBANMAXVS = 2200; // maximum shear wave velocity of the Bhuban deposit in meter/sec
-double BHUBANMINDENSITY = 2450; // minimum density of the Bhuban deposit in kg/m3
-double BHUBANMAXDENSITY = 2550; // maximum density of the Bhuban deposit in kg/m3
-double BHUBANVPVSRATIO = 2.0; // ratio between P-wave and S-wave velocity of the Bhuban deposit
-
-double PREMIOCENEMINVS = 2250; // minimum shear wave velocity of the PreMiocene deposit in meter/sec
-double PREMIOCENEMAXVS = 2400; // maximum shear wave velocity of the PreMiocene deposit in meter/sec
-double PREMIOCENEMINDENSITY = 2550; // minimum density of the PreMiocene deposit in kg/m3
-double PREMIOCENEMAXDENSITY = 2600; // maximum density of the PreMiocene deposit in kg/m3
-double PREMIOCENEVPVSRATIO = 1.9; // ratio between P-wave and S-wave velocity of the PreMiocene deposit
-
-double PRECAMBRIANMINVS = 3250; // minimum shear wave velocity of the PreCambrian deposit in meter/sec
-double PRECAMBRIANMAXVS = 3500; // maximum shear wave velocity of the PreCambrian deposit in meter/sec
-double PRECAMBRIANMINDENSITY = 2670; // minimum density of the PreCambrian deposit in kg/m3
-double PRECAMBRIANMAXDENSITY = 2800; // maximum density of the PreCambrian deposit in kg/m3
-double PRECAMBRIANVPVSRATIO = 1.8; // ratio between P-wave and S-wave velocity of the PreCambrian deposit
-
-double MANTLEMINVS = 4500; // minimum shear wave velocity of the Mantle in meter/sec
-double MANTLEMAXVS = 6000; // maximum shear wave velocity of the Mantle in meter/sec
-double MANTLEDENSITY = 3300; // density of the Mantle in kg/m3
-double MANTLEVPVSRATIO = 1.7; // ratio between P-wave and S-wave velocity of the Mantle
+//LAYERS[0].minvs = 100; // minimum shear wave velocity of the quaternary sediment in meter/sec
+//LAYERS[0].maxvs = 500; // maximum shear wave velocity of the quaternary sediment in meter/sec
+//LAYERS[0].minrho = 2000; // minimum density of the quaternary sediment in kg/m3
+//LAYERS[0].maxrho = 2050; // maximum density of the quaternary sediment in kg/m3
+//LAYERS[0].vpvsratio = 2.2; // ratio between P-wave and S-wave velocity Dupitila deposit
+//
+//LAYERS[1].minvs = 750; // minimum shear wave velocity of the Dupitila deposit in meter/sec
+//LAYERS[1].maxvs = 1000; // maximum shear wave velocity of the Dupitila deposit in meter/sec
+//LAYERS[1].minrho = 2100; // minimum density of the Dupitila deposit in kg/m3
+//LAYERS[1].maxrho = 2200; // maximum density of the Dupitila deposit in kg/m3
+//LAYERS[1].vpvsratio = 2.1; // ratio between P-wave and S-wave velocity of the Dupitila deposit
+//
+//LAYERS[2].minvs = 1050; // minimum shear wave velocity of the Tipam deposit in meter/sec
+//LAYERS[2].maxvs = 1100; // maximum shear wave velocity of the Tipam deposit in meter/sec
+//LAYERS[2].minrho = 2200; // minimum density of the Tipam deposit in kg/m3
+//LAYERS[2].maxrho = 2350; // maximum density of the Tipam deposit in kg/m3
+//LAYERS[2].vpvsratio = 2.1; // ratio between P-wave and S-wave velocity of the Tipam deposit
+//
+//LAYERS[3].minvs = 1250; // minimum shear wave velocity of the Bokabil deposit in meter/sec
+//LAYERS[3].maxvs = 1650; // maximum shear wave velocity of the Bokabil deposit in meter/sec
+//LAYERS[3].minrho = 2350; // minimum density of the Bokabil deposit in kg/m3
+//LAYERS[3].maxrho = 2450; // maximum density of the Bokabil deposit in kg/m3
+//LAYERS[3].vpvsratio = 2.0; // ratio between P-wave and S-wave velocity of the Bokabil deposit
+//
+//LAYERS[4].minvs = 1700; // minimum shear wave velocity of the Bhuban deposit in meter/sec
+//LAYERS[4].maxvs = 2200; // maximum shear wave velocity of the Bhuban deposit in meter/sec
+//LAYERS[4].minrho = 2450; // minimum density of the Bhuban deposit in kg/m3
+//LAYERS[4].maxrho = 2550; // maximum density of the Bhuban deposit in kg/m3
+//LAYERS[4].vpvsratio = 2.0; // ratio between P-wave and S-wave velocity of the Bhuban deposit
+//
+//LAYERS[5].minvs = 2250; // minimum shear wave velocity of the PreMiocene deposit in meter/sec
+//LAYERS[5].maxvs = 2400; // maximum shear wave velocity of the PreMiocene deposit in meter/sec
+//LAYERS[5].minrho = 2550; // minimum density of the PreMiocene deposit in kg/m3
+//LAYERS[5].maxrho = 2600; // maximum density of the PreMiocene deposit in kg/m3
+//LAYERS[5].vpvsratio = 1.9; // ratio between P-wave and S-wave velocity of the PreMiocene deposit
+//
+//LAYERS[6].minvs = 3250; // minimum shear wave velocity of the PreCambrian deposit in meter/sec
+//LAYERS[6].maxvs = 3500; // maximum shear wave velocity of the PreCambrian deposit in meter/sec
+//LAYERS[6].minrho = 2670; // minimum density of the PreCambrian deposit in kg/m3
+//LAYERS[6].maxrho = 2800; // maximum density of the PreCambrian deposit in kg/m3
+//LAYERS[6].vpvsratio = 1.8; // ratio between P-wave and S-wave velocity of the PreCambrian deposit
+//
+//LAYERS[7].minvs = 4500; // minimum shear wave velocity of the Mantle in meter/sec
+//LAYERS[7].maxvs = 6000; // maximum shear wave velocity of the Mantle in meter/sec
+//LAYERS[7].minrho = 3300; // density of the Mantle in kg/m3
+//LAYERS[7].maxrho = 3300;
+//LAYERS[7].vpvsratio = 1.7; // ratio between P-wave and S-wave velocity of the Mantle
 FILE* fp;
+FILE* fp_borehole;
 int DEBUG = 0;
 
 //typedef struct loc {

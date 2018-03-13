@@ -10,20 +10,31 @@
 #include "getdepth.h"
 
 
-
 int main(){
 
-	float * output;
-	float result[3];
+	initiate_layers();
+	cvmpayload_t result;
+	double minlat = 19.9;
+	double minlong = 86.5;
+	double lattitude = 25.57;
+	double longitude = 89.07;
+	double degreetodist = 111.01*1000;
+	double north = (lattitude-minlat)*degreetodist;
+	double east = (longitude-minlong)*degreetodist;
+	double z = 20;
 
-	output= getdepth(24.41, 90.58, 14000);
-	result[0] = *(output+0);
-	result[1] = *(output+1);
-	result[2] = *(output+2);
+	getdepth(north, east, z, &result);
+	double vs = result.Vs;
+	double vp = result.Vp;
+	double rho = result.rho;
+
+    printf("%f\n", vs);
+    printf("%f\n", vp);
+    printf("%f\n", rho);
 
 
-	for(int i=0; i<3; i++){
-		printf("%f\n",result[i]);
-	}
+
+
+
 
 }

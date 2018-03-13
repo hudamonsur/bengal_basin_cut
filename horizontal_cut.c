@@ -15,15 +15,17 @@
 // the program generates an array of values of material properties at a certain depth
 
 int main(){
+    initiate_layers();
 
-	float minlat= 19.9;
-	float maxlat= 27;
-	float minlong= 86.5;
-	float maxlong= 93.4;
+	float minlat= 24.3;
+	float maxlat= 25.7;
+	float minlong= 88.5;
+	float maxlong= 89.7;
 	float diflat = maxlat-minlat;
 	float diflong = maxlong-minlong;
 	float dx = 0.01;
-	float depth = 500;
+	float depth = 20;
+	cvmpayload_t result;
 
 	int sizex = diflong/dx;
 	int sizey = diflat/dx;
@@ -50,28 +52,28 @@ int main(){
 	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("horizontal_cut_500m_vs.txt", "w");
+	vsPtr = fopen("horizontal_cut_200m_vs.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("horizontal_cut_500m_vp.txt", "w");
+	vpPtr = fopen("horizontal_cut_200m_vp.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("horizontal_cut_500m_rho.txt", "w");
-
-	float * result;
+	rhoPtr = fopen("horizontal_cut_200m_rho.txt", "w");
 
 	for(i = 0; i<sizex; i++){
 		for(j = 0; j<sizey; j++){
-			result = getdepth(lattitude[j], longitude[i], depth);
-			float tempvs = *(result+0);
-			float tempvp = *(result+1);
-			float temprho = *(result+2);
+			getdepth(lattitude[j], longitude[i], depth, &result);
+			double tempvs = result.Vs;
+			double tempvp = result.Vp;
+			double temprho = result.rho;
 			/* in *(result+0),
 			0 means shear wave velocity;
 			1 means p-wave velocity and
 			2 means density*/
-			fprintf(vsPtr, "%.2f\t%.2f\t%.0f\n", x[i], y[j], tempvs);
-			fprintf(vpPtr, "%.2f\t%.2f\t%.0f\n", x[i], y[j], tempvp);
-			fprintf(rhoPtr, "%.2f\t%.2f\t%.0f\n", x[i], y[j], temprho);
+			fprintf(vsPtr, "%.2f\t%.2f\t%.2f\n", x[i], y[j], tempvs);
+			fprintf(vpPtr, "%.2f\t%.2f\t%.2f\n", x[i], y[j], tempvp);
+			fprintf(rhoPtr, "%.2f\t%.2f\t%.2f\n", x[i], y[j], temprho);
 		}
+		printf("%d %d\n", i, sizex);
 	}
+	puts("done!!!!!!!!");
 
 }
