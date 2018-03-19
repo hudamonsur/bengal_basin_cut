@@ -20,16 +20,19 @@ int main(){
 
     initiate_layers();
 
-	double lat1 = 25;
-	double lat2 = 25;
+	double lat1 = 23;
+	double lat2 = 23;
 	double long1 = 86.5;
 	double long2 = 93.4;
-	double dx = 0.01;
-	int dz = 20;
+	double minlat = 19.9;
+	double minlong = 86.5;
+	double dx = 0.1;
+	int dz = 200;
 	int size;
-	int maxdepth = 1000;
+	int maxdepth = 50000;
 	int ndepthpoints = maxdepth/dz;
 	double angle;
+	double degreetodist = 111.01*1000;
 
 	double diflat  = lat2 - lat1;
 	double diflong = long2 - long1;
@@ -49,6 +52,8 @@ int main(){
 	double longitude[size];
 	double lattitude[size];
 	double dist[size];
+	double north[size];
+	double east[size];
 
 	dist[0]=0;
 	lattitude[0]=lat1;
@@ -66,23 +71,29 @@ int main(){
 		lattitude[i] = lat1 + dist[i]*(fabs(sin(angle)));
 		longitude[i] = long1 + dist[i]*(fabs(cos(angle)));
 	}
+	// converting longitude and latitude to meters
+	for(i=0;i<size;i++){
+        north[i] = (lattitude[i]-minlat)*degreetodist;
+        east[i] = (longitude[i]-minlong)*degreetodist;
+	}
+
 	for(j = 0; j<size; j++){
 		dist[j] = dist[j]*111.01;
 	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("vertical_cut_along25lat_vs1.txt", "w");
+	vsPtr = fopen("vertical_cut_along23lat_vs1.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("vertical_cut_along25lat_vp1.txt", "w");
+	vpPtr = fopen("vertical_cut_along23lat_vp1.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("vertical_cut_along25lat_rho1.txt", "w");
+	rhoPtr = fopen("vertical_cut_along23lat_rho1.txt", "w");
 	cvmpayload_t result;
 	//FILE *fp;
 	//fp=fopen("/Users/monsurul/Documents/uofm/Desktop/qualifying_phd/velocity model/depth.bin","rb");
 
 	for(i = 0; i<(ndepthpoints); i++){
 		for(j = 0; j<(size); j++){
-			getdepth(lattitude[j], longitude[j], z[i], &result);
+			getdepth(north[j], east[j], z[i], &result);
 			double tempvs = result.Vs;
 			double tempvp = result.Vp;
 			double temprho = result.rho;
@@ -90,14 +101,15 @@ int main(){
 			0 means shear wave velocity;
 			1 means p-wave velocity and
 			2 means density*/
-			fprintf( vsPtr, "%.2f\t%.0f\t%.0f\n", dist[j], z[i], tempvs );
-			fprintf( vpPtr, "%.2f\t%.0f\t%.0f\n", dist[j], z[i], tempvp );
-			fprintf( rhoPtr, "%.2f\t%.0f\t%.0f\n", dist[j], z[i], temprho );
+			fprintf( vsPtr, "%.2f\t%.0f\t%.2f\n", dist[j], z[i], tempvs );
+			fprintf( vpPtr, "%.2f\t%.0f\t%.2f\n", dist[j], z[i], tempvp );
+			fprintf( rhoPtr, "%.2f\t%.0f\t%.2f\n", dist[j], z[i], temprho );
 			//break;
 		}
 		printf("%d %d\n", i, ndepthpoints);
 		//break;
 	}
+	//printf("%f\n",longitude[35]);
 
 	puts("done!!!!!!!!");
 

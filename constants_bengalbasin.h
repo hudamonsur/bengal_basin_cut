@@ -28,6 +28,17 @@ const char * LAYER_NAMES[] = {
     "precambrian",
     "mantle",
 };
+
+const char * BIN_NAMES[] = {
+    "depth_sediment.bin",
+    "depth_dupitila.bin",
+    "depth_tipam.bin",
+    "depth_bokabil.bin",
+    "depth_bhuban.bin",
+    "depth_precambrian.bin",
+    "depth_moho.bin",
+};
+int BIN_COUNT = 7;
 int LAYER_COUNT = 8;
 layer_params LAYERS[8];
 double LAYER_MINVS[] = {100, 750, 1050, 1250, 1700, 2250, 3250, 4500};
