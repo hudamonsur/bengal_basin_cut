@@ -20,16 +20,16 @@ int main(){
 
     initiate_layers();
 
-	double lat1 = 23;
-	double lat2 = 23;
-	double long1 = 86.5;
-	double long2 = 93.4;
+	double lat1 = 22.88;
+	double lat2 = 24.88;
+	double long1 = 90.487;
+	double long2 = 90.487;
 	double minlat = 19.9;
 	double minlong = 86.5;
-	double dx = 0.1;
-	int dz = 200;
+	double dx = 0.01;
+	int dz = 50;
 	int size;
-	int maxdepth = 50000;
+	int maxdepth = 4000;
 	int ndepthpoints = maxdepth/dz;
 	double angle;
 	double degreetodist = 111.01*1000;
@@ -82,11 +82,11 @@ int main(){
 	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("vertical_cut_along23lat_vs1.txt", "w");
+	vsPtr = fopen("vertical_cut_alongkamtalong_vs.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("vertical_cut_along23lat_vp1.txt", "w");
+	vpPtr = fopen("vertical_cut_alongkamtalong_vp.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("vertical_cut_along23lat_rho1.txt", "w");
+	rhoPtr = fopen("vertical_cut_alongkamtalong_rho.txt", "w");
 	cvmpayload_t result;
 	//FILE *fp;
 	//fp=fopen("/Users/monsurul/Documents/uofm/Desktop/qualifying_phd/velocity model/depth.bin","rb");
@@ -101,9 +101,9 @@ int main(){
 			0 means shear wave velocity;
 			1 means p-wave velocity and
 			2 means density*/
-			fprintf( vsPtr, "%.2f\t%.0f\t%.2f\n", dist[j], z[i], tempvs );
-			fprintf( vpPtr, "%.2f\t%.0f\t%.2f\n", dist[j], z[i], tempvp );
-			fprintf( rhoPtr, "%.2f\t%.0f\t%.2f\n", dist[j], z[i], temprho );
+			fprintf( vsPtr, "%.4f\t%.0f\t%.2f\n", dist[j], z[i], tempvs );
+			fprintf( vpPtr, "%.4f\t%.0f\t%.2f\n", dist[j], z[i], tempvp );
+			fprintf( rhoPtr, "%.4f\t%.0f\t%.2f\n", dist[j], z[i], temprho );
 			//break;
 		}
 		printf("%d %d\n", i, ndepthpoints);

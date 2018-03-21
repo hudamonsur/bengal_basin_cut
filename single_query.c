@@ -33,7 +33,7 @@ int main(){
 //	//printf("%.4f\n", inputlong);
 //    double diflat = inputlat-MINLAT;
 //	double diflong = inputlong-MINLONG;
-	double z = 38000;
+	double z = 200;
 //	double value_precambrian = getsurfacedepth(dlat, dlong, diflong, diflat, inputlong, inputlat, PRECAMBRIAN_BIN);
 //	double value_bhuban = getsurfacedepth(dlat, dlong, diflong, diflat, inputlong, inputlat, BHUBAN_BIN);
 

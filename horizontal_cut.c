@@ -17,25 +17,30 @@
 int main(){
     initiate_layers();
 
-	float minlat= 24.3;
-	float maxlat= 25.7;
-	float minlong= 88.5;
-	float maxlong= 89.7;
-	float diflat = maxlat-minlat;
-	float diflong = maxlong-minlong;
-	float dx = 0.01;
-	float depth = 20;
+	double lat1 = 22.8;
+	double lat2 = 24.8;
+	double long1 = 89.5;
+	double long2 = 91.5;
+	double minlat = 19.9;
+	double minlong = 86.5;
+	double diflat = lat2-lat1;
+	double diflong = long2-long1;
+	double dx = 0.01;
+	double depth = 4000;
 	cvmpayload_t result;
+	double degreetodist = 111.01*1000;
 
 	int sizex = diflong/dx;
 	int sizey = diflat/dx;
-	float lattitude[sizey];
-	float longitude[sizex];
-	float x[sizex];
-	float y[sizey];
+	double lattitude[sizey];
+	double longitude[sizex];
+	double x[sizex];
+	double y[sizey];
+    double north[sizey];
+	double east[sizex];
 
-	lattitude[0] = minlat;
-	longitude[0] = minlong;
+	lattitude[0] = lat1;
+	longitude[0] = long1;
 	x[0] = 0;
 	y[0] = 0;
 	int i;
@@ -50,17 +55,23 @@ int main(){
 		y[i] = y[i-1] + dx * 111.01;
 		lattitude[i] = lattitude[i-1] + dx;
 	}
+	for(i=0;i<sizex;i++){
+        east[i] = (longitude[i]-minlong)*degreetodist;
+	}
+	for(i=0;i<sizey;i++){
+        north[i] = (lattitude[i]-minlat)*degreetodist;
+	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("horizontal_cut_200m_vs.txt", "w");
+	vsPtr = fopen("horizontal_cut_kamta4000m_vs.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("horizontal_cut_200m_vp.txt", "w");
+	vpPtr = fopen("horizontal_cut_kamta4000m_vp.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("horizontal_cut_200m_rho.txt", "w");
+	rhoPtr = fopen("horizontal_cut_kamta4000m_rho.txt", "w");
 
 	for(i = 0; i<sizex; i++){
 		for(j = 0; j<sizey; j++){
-			getdepth(lattitude[j], longitude[i], depth, &result);
+			getdepth(north[j], east[i], depth, &result);
 			double tempvs = result.Vs;
 			double tempvp = result.Vp;
 			double temprho = result.rho;
