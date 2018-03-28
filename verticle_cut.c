@@ -20,16 +20,16 @@ int main(){
 
     initiate_layers();
 
-	double lat1 = 22.88;
-	double lat2 = 24.88;
-	double long1 = 90.487;
-	double long2 = 90.487;
+	double lat1 = 19.9;
+	double lat2 = 27;
+	double long1 = 89;
+	double long2 = 89;
 	double minlat = 19.9;
 	double minlong = 86.5;
 	double dx = 0.01;
-	int dz = 50;
+	int dz = 200;
 	int size;
-	int maxdepth = 4000;
+	int maxdepth = 50000;
 	int ndepthpoints = maxdepth/dz;
 	double angle;
 	double degreetodist = 111.01*1000;
@@ -82,17 +82,18 @@ int main(){
 	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("vertical_cut_alongkamtalong_vs.txt", "w");
+	vsPtr = fopen("vertical_cut_along100km89long_vs.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("vertical_cut_alongkamtalong_vp.txt", "w");
+	vpPtr = fopen("vertical_cut_along100km89long_vp.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("vertical_cut_alongkamtalong_rho.txt", "w");
+	rhoPtr = fopen("vertical_cut_along100km89long_rho.txt", "w");
 	cvmpayload_t result;
 	//FILE *fp;
 	//fp=fopen("/Users/monsurul/Documents/uofm/Desktop/qualifying_phd/velocity model/depth.bin","rb");
 
 	for(i = 0; i<(ndepthpoints); i++){
 		for(j = 0; j<(size); j++){
+            //printf("%d>>>>1\n",j);
 			getdepth(north[j], east[j], z[i], &result);
 			double tempvs = result.Vs;
 			double tempvp = result.Vp;
@@ -101,6 +102,7 @@ int main(){
 			0 means shear wave velocity;
 			1 means p-wave velocity and
 			2 means density*/
+			//printf("%d>>>>2\n",j);
 			fprintf( vsPtr, "%.4f\t%.0f\t%.2f\n", dist[j], z[i], tempvs );
 			fprintf( vpPtr, "%.4f\t%.0f\t%.2f\n", dist[j], z[i], tempvp );
 			fprintf( rhoPtr, "%.4f\t%.0f\t%.2f\n", dist[j], z[i], temprho );

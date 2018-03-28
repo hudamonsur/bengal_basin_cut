@@ -13,6 +13,7 @@ double DEGREETODIST = 111.01*1000; // degree to distance multiplier in meters
 
 double SEDIMENTDEPTH = 100; // fixed sediment depth assumed for the model in meters
 double APPROXCRUSTTHICKNESS = 20000; // average approximated crustal thickness
+int BH_INFLUENCE = 10; // borehole influence distance.
 
 typedef struct layer_params {
     double minvs, maxvs, minrho, maxrho, vpvsratio;

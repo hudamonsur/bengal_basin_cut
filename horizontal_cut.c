@@ -17,16 +17,16 @@
 int main(){
     initiate_layers();
 
-	double lat1 = 22.8;
-	double lat2 = 24.8;
-	double long1 = 89.5;
-	double long2 = 91.5;
+	double lat1 = 19.9;
+	double lat2 = 27;
+	double long1 = 86.5;
+	double long2 = 93.4;
 	double minlat = 19.9;
 	double minlong = 86.5;
 	double diflat = lat2-lat1;
 	double diflong = long2-long1;
 	double dx = 0.01;
-	double depth = 4000;
+	double depth = 2000;
 	cvmpayload_t result;
 	double degreetodist = 111.01*1000;
 
@@ -63,11 +63,11 @@ int main(){
 	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("horizontal_cut_kamta4000m_vs.txt", "w");
+	vsPtr = fopen("horizontal_cut_10km2000m_vs.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("horizontal_cut_kamta4000m_vp.txt", "w");
+	vpPtr = fopen("horizontal_cut_10km2000m_vp.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("horizontal_cut_kamta4000m_rho.txt", "w");
+	rhoPtr = fopen("horizontal_cut_10km2000m_rho.txt", "w");
 
 	for(i = 0; i<sizex; i++){
 		for(j = 0; j<sizey; j++){

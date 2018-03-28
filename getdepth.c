@@ -64,6 +64,7 @@ int getdepth(double north_m, double east_m, double depth_m, cvmpayload_t* result
 
 	double * bh_values;
 	cvmpayload_t bh_params;
+	//puts("ingetdepth>>>>>>>1");
 	bh_values = getboreholevalues(inputlat, inputlong, depth_m);
 	double bh_confidence = *(bh_values+0);
 	bh_params.Vs = *(bh_values+1);
@@ -75,17 +76,20 @@ int getdepth(double north_m, double east_m, double depth_m, cvmpayload_t* result
         puts("<<<<<<<<<<<<<<<<<< calculating surface values>>>>>>>>>>>>>>>>>>>");
 	};
 
+	//puts("ingetdepth>>>>>>>2");
 	cvmpayload_t surface_params = getsurfacevalues(dlat, dlong, diflat, diflong, inputlat, inputlong, depth_m);
     if (DEBUG==1){
         puts("<<<<<<<<<<<<<< calculating return values>>>>>>>>>>>>>>>>>>>");
 	};
 	//temp_result = bh_params;
 
+	//puts("ingetdepth>>>>>>>3");
 	temp_result = computefinalvalues(bh_params, surface_params, bh_confidence);
     result->Vp  = temp_result.Vp;
     result->Vs  = temp_result.Vs;
     result->rho = temp_result.rho;
 
+	//puts("ingetdepth>>>>>>>4");
 	return 0;
 	//fclose(output);
 	//printf("%f",value);
@@ -395,10 +399,10 @@ double * getboreholevalues(double inputlat, double inputlong, double depth){
                 double borehole_dist = (sqrt(pow((borehole_latf-inputlat),2) + pow((borehole_longf-inputlong),2)))*111.01;
                 //double dist_lim = 100;
 
-                if(borehole_dist<100){
-                    double borehole_confidence = (100-borehole_dist)/100;
+                if(borehole_dist<BH_INFLUENCE){
+                    double borehole_confidence = (BH_INFLUENCE-borehole_dist)/BH_INFLUENCE;
                     char str1[] = ".txt";
-                    char * selected_borehole = (char*) malloc(40 * sizeof(char));
+                    char * selected_borehole = (char*) malloc(60 * sizeof(char));
                     strcpy(selected_borehole, borehole_name);
                     strcat(selected_borehole, str1);
                     //puts(selected_borehole);
@@ -411,6 +415,7 @@ double * getboreholevalues(double inputlat, double inputlong, double depth){
                     bh_vs[bhnumbers] = bh_values.Vs;
                     //printf("%d %s\n",bhnumbers,bh_names[bhnumbers]);
                     bhnumbers++;
+                    free(selected_borehole);
 //                    puts(selected_borehole);
 
                 }
@@ -442,6 +447,7 @@ double * getboreholevalues(double inputlat, double inputlong, double depth){
 	result[3] = density;
 	//puts("<<<<<<<<borehole values calculated>>>>>>");
 
+	free(bh_names);
 	return result;
 }
 
@@ -462,7 +468,7 @@ cvmpayload_t getbhvalues(char* bhname, double depth, double confidence){
 
     cvmpayload_t result;
     cvmpayload_t tmp_result;
-    char ** name_layers = (char**) malloc(400 * sizeof(char*));
+    char ** name_layers = (char**) malloc(600 * sizeof(char*));
     double layer_depth[10];
     int layercount = 0;
 //    if (DEBUG==1){
@@ -479,12 +485,13 @@ cvmpayload_t getbhvalues(char* bhname, double depth, double confidence){
                     char *str1 = strtok(str, " ");
                     char *depth = strtok(NULL, " ");
                     double lr_depth = atof(depth);
-                    char * lr_name = (char*) malloc(40 * sizeof(char));
+                    char * lr_name = (char*) malloc(60 * sizeof(char));
                     strcpy(lr_name, str1);
                     //printf("%s %f\n", lr_name, lr_depth);
                     name_layers[layercount] = lr_name;
                     layer_depth[layercount] = lr_depth;
                     layercount++;
+                    free(lr_name);
                }
         }
     }
@@ -533,6 +540,7 @@ cvmpayload_t getbhvalues(char* bhname, double depth, double confidence){
     result.rho = confidence*tmp_result.rho;
     result.Vs = confidence*tmp_result.Vs;
     result.Vp = confidence*tmp_result.Vp;
+    free(name_layers);
     return result;
 
 }
