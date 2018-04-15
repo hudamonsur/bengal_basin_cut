@@ -63,11 +63,11 @@ int main(){
 	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("horizontal_cut_10km2000m_vs.txt", "w");
+	vsPtr = fopen("horizontal_cut_20km_exp2000m_vs.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("horizontal_cut_10km2000m_vp.txt", "w");
+	vpPtr = fopen("horizontal_cut_20km_exp2000m_vp.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("horizontal_cut_10km2000m_rho.txt", "w");
+	rhoPtr = fopen("horizontal_cut_20km_exp2000m_rho.txt", "w");
 
 	for(i = 0; i<sizex; i++){
 		for(j = 0; j<sizey; j++){

@@ -4,19 +4,10 @@
 #include<stdlib.h>
 #include<math.h>
 #include<string.h>
-//#include<malloc.h>
 
 #include "getdepth.h"
 #include "constants_bengalbasin.h"
 
-//cvmpayload_t getmantlevalues(double depth, double mindepth);
-//cvmpayload_t getcrustvalues(double depth, double mindepth);
-//cvmpayload_t getbhubanvalues(double depth, double maxdepth, double mindepth);
-//cvmpayload_t getbokabilvalues(double depth, double maxdepth, double mindepth);
-//cvmpayload_t gettipamvalues(double depth, double maxdepth, double mindepth);
-//cvmpayload_t getdupitilavalues(double depth, double maxdepth, double mindepth);
-//cvmpayload_t getpremiocenevalues(double depth, double maxdepth, double mindepth);
-//cvmpayload_t getsedimentvalues(double depth);
 cvmpayload_t getlayervalues(layer_params layer, double depth, double maxdepth, double mindepth);
 double * getboreholevalues(double inputlat, double inputlong, double depth);
 cvmpayload_t getsurfacevalues(double dlat, double dlong, double diflat, double diflong, double inputlat, double inputlong, double depth);
@@ -24,6 +15,7 @@ double getsurfacedepth(double dlat, double dlong, double diflong, double diflat,
 cvmpayload_t getbhvalues(char* bhname, double depth, double confidence);
 double sum_array(double array[], int size);
 cvmpayload_t computefinalvalues(cvmpayload_t bh_params, cvmpayload_t surface_params, double bh_confidence);
+double getbhconfidence(double bh_dist);
 //double avg_array(double array, int size);
 
 int getdepth(double north_m, double east_m, double depth_m, cvmpayload_t* result)
@@ -32,18 +24,8 @@ int getdepth(double north_m, double east_m, double depth_m, cvmpayload_t* result
 	double dlat = (MAXLAT-MINLAT)/GRIDSTEP;
 	double dlong = (MAXLONG-MINLONG)/GRIDSTEP;
 
-	/*long bytevalue;*/
-	// converting east and north values to lattitude and longitude
-//	loc * inputloc = (loc*) malloc(2 * sizeof(loc));
-//	inputloc.laty = MINLOC.laty + north_m/(DEGREETODIST);
-//	inputloc.longx = MINLOC.longx + east_m/(DEGREETODIST);
-//
-//	loc * difloc = loc_dif(inputloc, MINLOC);
-
 	double inputlat = MINLAT + north_m/(DEGREETODIST);
-	//printf("%.4f\n", inputlat);
 	double inputlong = MINLONG + east_m/(DEGREETODIST);
-	//printf("%.4f\n", inputlong);
 
 	double diflat = inputlat-MINLAT;
 	double diflong = inputlong-MINLONG;
@@ -91,9 +73,6 @@ int getdepth(double north_m, double east_m, double depth_m, cvmpayload_t* result
 
 	//puts("ingetdepth>>>>>>>4");
 	return 0;
-	//fclose(output);
-	//printf("%f",value);
-	//free(fp);
 
 }
 
@@ -130,10 +109,7 @@ cvmpayload_t getsurfacevalues(double dlat, double dlong, double diflat, double d
         if(DEBUG==1){printf("%.4f\n", value);}
         values[i] = value;
     }
-//    if (DEBUG==1){
-//        puts("<<<<<<<<<<<<<< depth calculated>>>>>>>>>>>>>>>>");
-//    };
-//  calculating velocities from binary files
+
     if (depth==0){
         if (values[5]==0){
             result = getlayervalues(LAYERS[6], depth, values[6], values[5]);
@@ -176,55 +152,6 @@ cvmpayload_t getsurfacevalues(double dlat, double dlong, double diflat, double d
         }
     }
 
-//	double value_moho = getsurfacedepth(dlat, dlong, diflong, diflat, inputlong, inputlat, MOHO_BIN);
-//	printf("%.2f\n", value_moho);
-//	double value_precambrian = getsurfacedepth(dlat, dlong, diflong, diflat, inputlong, inputlat, PRECAMBRIAN_BIN);
-//	printf("%.2f\n", value_precambrian);
-//	double value_bhuban = getsurfacedepth(dlat, dlong, diflong, diflat, inputlong, inputlat, BHUBAN_BIN);
-//	printf("%.2f\n", value_bhuban);
-//	double value_bokabil = getsurfacedepth(dlat, dlong, diflong, diflat, inputlong, inputlat, BOKABIL_BIN);
-//	printf("%.2f\n", value_bokabil);
-//	double value_tipam = getsurfacedepth(dlat, dlong, diflong, diflat, inputlong, inputlat, TIPAM_BIN);
-//	printf("%.2f\n", value_tipam);
-//	double value_dupitila = getsurfacedepth(dlat, dlong, diflong, diflat, inputlong, inputlat, DUPITILA_BIN);
-//	printf("%.2f\n", value_dupitila);
-//	double value_sediment = getsurfacedepth(dlat, dlong, diflong, diflat, inputlong, inputlat, SEDIMENT_BIN);
-//	printf("%.2f\n", value_sediment);
-
-//	if (depth>(value_moho)){
-//        result = getlayervalues(LAYERS[7], depth, depth, value_moho);
-//		//result = getsedimentvalues(depth_m);
-//	}
-//		else if (depth>=(value_precambrian) && depth<value_moho){
-//		result = getlayervalues(LAYERS[6], depth, value_moho, value_precambrian);
-//		//result = getdupitilavalues(depth_m, value_dupitila, SEDIMENTDEPTH);
-//		}
-//		else if (depth<(value_precambrian) && depth>=(value_bhuban)){
-//        result = getlayervalues(LAYERS[5], depth, value_precambrian, value_bhuban);
-//        //result = getpremiocenevalues(depth_m, value_precambrian, value_bhuban);
-//		}
-//		else if (depth<(value_bhuban) && depth>=(value_bokabil)) {
-//		result = getlayervalues(LAYERS[4], depth, value_bhuban, value_bokabil);
-//		//result = getbhubanvalues(depth_m, value_bhuban, value_bokabil);
-//		}
-//		else if (depth<(value_bokabil) && depth>=(value_tipam)){
-//		result = getlayervalues(LAYERS[3], depth, value_bokabil, value_tipam);
-//		//result = getbokabilvalues(depth_m, value_bokabil, value_tipam);
-//		}
-//		else if (depth<(value_tipam) && depth>=(value_dupitila)){
-//		result = getlayervalues(LAYERS[2], depth, value_tipam, value_dupitila);
-//		//result = gettipamvalues(depth_m, value_tipam, value_dupitila);
-//		}
-//		else if (depth<(value_dupitila) && depth>=(value_sediment)){
-//		result = getlayervalues(LAYERS[1], depth, value_dupitila, value_sediment);
-//		//result = getdupitilavalues(depth_m, value_dupitila, SEDIMENTDEPTH);
-//        }
-//		else{
-//		result = getlayervalues(LAYERS[0], depth, value_sediment, 0);
-//		//result = getmantlevalues(depth_m, value_precambrian);
-//		}
-
-
     if(DEBUG==1){
         puts("Surface values:");
         printf("%0.4f\n", result.Vs);
@@ -233,7 +160,6 @@ cvmpayload_t getsurfacevalues(double dlat, double dlong, double diflat, double d
     }
 
     return result;
-
 
 }
 
@@ -280,13 +206,13 @@ double getsurfacedepth(double dlat, double dlong, double diflong, double diflat,
 //    if (DEBUG==1){
 //        puts("<<<<<<<<<<<<<<<<<<< loading binary file>>>>>>>>>>>>>>>>>>>");
 //    }
-	fp = fopen(fname, "rb");
+	fp_bengalbasin = fopen(fname, "rb");
 //	if (DEBUG==1){
 //        puts("<<<<<<<<<<<<<<<<<<<<<<<<<<binary file loaded>>>>>>>>>>>>>>>>>>>>>>>>>");
 //
 //	}
 
-	if (!fp)
+	if (!fp_bengalbasin)
 	{
 		printf("Unable to open binary file!");
 		return 0;
@@ -298,26 +224,26 @@ double getsurfacedepth(double dlat, double dlong, double diflong, double diflat,
 
 		if (intervalnumberlatitude==0 && intervalnumberlongitude==0){
 			byteval1 = intervalnumberlongitude*8 + 8;
-			fseek(fp, byteval1, SEEK_SET);
-			fread(&value, 8, 1, fp);
+			fseek(fp_bengalbasin, byteval1, SEEK_SET);
+			fread(&value, 8, 1, fp_bengalbasin);
 			if(DEBUG==1){printf("1>>>>>>>\n");}
 		}
 		else if (intervalnumberlatitude==0){
 			byteval1 = intervalnumberlongitude*8;
-			fseek(fp, byteval1, SEEK_SET);
-			fread(&value, 8, 1, fp);
+			fseek(fp_bengalbasin, byteval1, SEEK_SET);
+			fread(&value, 8, 1, fp_bengalbasin);
 			if(DEBUG==1){printf("2>>>>>>>\n");}
 		}
 		else if(intervalnumberlongitude==0){
 			byteval1 = intervalnumberlatitude*16000 + 8;
-			fseek(fp, byteval1, SEEK_SET);
-			fread(&value, 8, 1, fp);
+			fseek(fp_bengalbasin, byteval1, SEEK_SET);
+			fread(&value, 8, 1, fp_bengalbasin);
 			if(DEBUG==1){printf("3>>>>>>>\n");}
 		}
 		else if(intervalnumberlatitude==2000 || intervalnumberlongitude==2000){
 			byteval1 = intervalnumberlatitude*16000 + intervalnumberlongitude*8;
-			fseek(fp, byteval1, SEEK_SET);
-			fread(&value, 8, 1, fp);
+			fseek(fp_bengalbasin, byteval1, SEEK_SET);
+			fread(&value, 8, 1, fp_bengalbasin);
 			if(DEBUG==1){printf("4>>>>>>>\n");}
 		}
 		else {
@@ -331,14 +257,14 @@ double getsurfacedepth(double dlat, double dlong, double diflong, double diflat,
 			double long2 = long1 - dlong;
 
 			/* seeking values */
-			fseek(fp, byteval1, SEEK_SET);
-			fread(&val1, 8, 1, fp);
-			fseek(fp, byteval2, SEEK_SET);
-			fread(&val2, 8, 1, fp);
-			fseek(fp, byteval3, SEEK_SET);
-			fread(&val3, 8, 1, fp);
-			fseek(fp, byteval4, SEEK_SET);
-			fread(&val4, 8, 1, fp);
+			fseek(fp_bengalbasin, byteval1, SEEK_SET);
+			fread(&val1, 8, 1, fp_bengalbasin);
+			fseek(fp_bengalbasin, byteval2, SEEK_SET);
+			fread(&val2, 8, 1, fp_bengalbasin);
+			fseek(fp_bengalbasin, byteval3, SEEK_SET);
+			fread(&val3, 8, 1, fp_bengalbasin);
+			fseek(fp_bengalbasin, byteval4, SEEK_SET);
+			fread(&val4, 8, 1, fp_bengalbasin);
 
 			double R1 = ((long2-east)/(long2-long1))*val1 + ((east-long1)/(long2-long1))*val2;
 			//printf("%.4f %.4f\n", long2, east);
@@ -348,7 +274,7 @@ double getsurfacedepth(double dlat, double dlong, double diflong, double diflat,
 			if(DEBUG==1){printf("5>>>>>>>\n");}
 		}
 	}
-	fclose(fp);
+	fclose(fp_bengalbasin);
 	//int a;
 	//printf("%f >>>>>>> %d\n", value, a);
 	//value = value;
@@ -370,21 +296,21 @@ double * getboreholevalues(double inputlat, double inputlong, double depth){
 	char ** bh_names = (char**) malloc(4000 * sizeof(char*));
 	int bhnumbers = 0;
     int linecount = 0;
-	int ch = 0;
+	//int ch = 0;
 //	if (DEBUG==1){
 //        puts("<<<<<<<<<<<<<< opening borehole list >>>>>>>>>>>>>>>>>>>");
 //	};
-	fp = fopen(BHNAMES_LIST,"r");
+	fp_bengalbasin = fopen(BHNAMES_LIST,"r");
 
-	if (!fp)
+	if (!fp_bengalbasin)
 	{
 		printf("Unable to open borehole list!");
 		return 0;
 	}
 	else {
-		while(!feof(fp)) {
+		while(!feof(fp_bengalbasin)) {
 			char str[60];
-			if( fgets (str, 60, fp)!=NULL ) {
+			if( fgets (str, 60, fp_bengalbasin)!=NULL ) {
             /* writing content to stdout */
                 if(str[0]=='\n'){
                     linecount++;
@@ -400,7 +326,7 @@ double * getboreholevalues(double inputlat, double inputlong, double depth){
                 //double dist_lim = 100;
 
                 if(borehole_dist<BH_INFLUENCE){
-                    double borehole_confidence = (BH_INFLUENCE-borehole_dist)/BH_INFLUENCE;
+                    double borehole_confidence = getbhconfidence(borehole_dist);
                     char str1[] = ".txt";
                     char * selected_borehole = (char*) malloc(60 * sizeof(char));
                     strcpy(selected_borehole, borehole_name);
@@ -424,7 +350,7 @@ double * getboreholevalues(double inputlat, double inputlong, double depth){
 
 		}
 	}
-	fclose(fp);
+	fclose(fp_bengalbasin);
 	//printf("%s %d\n", "number of boreholes:", bhnumbers);
 	if(bhnumbers>0){
         vs = sum_array(bh_vs,bhnumbers)/sum_array(bh_confidence_all,bhnumbers);
@@ -449,6 +375,14 @@ double * getboreholevalues(double inputlat, double inputlong, double depth){
 
 	free(bh_names);
 	return result;
+}
+
+double getbhconfidence(double bh_dist){
+
+    double value = (pow((bh_dist/(BH_INFLUENCE/2)),3))*-1;
+    double bh_confidence = exp(value);
+    return bh_confidence;
+
 }
 
 double sum_array(double array[], int size){

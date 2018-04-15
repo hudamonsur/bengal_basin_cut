@@ -20,16 +20,16 @@ int main(){
 
     initiate_layers();
 
-	double lat1 = 19.9;
-	double lat2 = 27;
-	double long1 = 89;
-	double long2 = 89;
+	double lat1 = 21.88;
+	double lat2 = 26.35;
+	double long1 = 86.78;
+	double long2 = 93.22;
 	double minlat = 19.9;
 	double minlong = 86.5;
 	double dx = 0.01;
-	int dz = 200;
+	int dz = 30;
 	int size;
-	int maxdepth = 50000;
+	int maxdepth = 10000;
 	int ndepthpoints = maxdepth/dz;
 	double angle;
 	double degreetodist = 111.01*1000;
@@ -82,11 +82,11 @@ int main(){
 	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("vertical_cut_along100km89long_vs.txt", "w");
+	vsPtr = fopen("vertical_cut_along20km_expSE-NW_vs.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("vertical_cut_along100km89long_vp.txt", "w");
+	vpPtr = fopen("vertical_cut_along20km_expSE-NW_vp.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("vertical_cut_along100km89long_rho.txt", "w");
+	rhoPtr = fopen("vertical_cut_along20km_expSE-NW_rho.txt", "w");
 	cvmpayload_t result;
 	//FILE *fp;
 	//fp=fopen("/Users/monsurul/Documents/uofm/Desktop/qualifying_phd/velocity model/depth.bin","rb");
