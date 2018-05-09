@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_BENGALBASIN_H_
 #define CONSTANTS_BENGALBASIN_H_
 #include<stdio.h>
-#include "filenames.h"
+//#include "filenames.h"
 
 double MINLAT = 19.9; // minimum latitude of the extent of simulation region in degree decimal
 double MAXLAT = 27; // maximum latitude of the extent of simulation region in degree decimal
@@ -11,9 +11,10 @@ double MAXLONG = 93.4; // maximum longitude of the extent of simulation region i
 int GRIDSTEP = 2000; // grid step of the binary files generated from the contours
 double DEGREETODIST = 111.01*1000; // degree to distance multiplier in meters
 
-double SEDIMENTDEPTH = 100; // fixed sediment depth assumed for the model in meters
+//double SEDIMENTDEPTH = 100; // fixed sediment depth assumed for the model in meters
 double APPROXCRUSTTHICKNESS = 20000; // average approximated crustal thickness
-int BH_INFLUENCE = 10; // borehole influence distance.
+int BH_INFLUENCE = 100; // borehole influence distance.
+char BHNAMES_LIST[] = "borehole_list.txt";
 
 typedef struct layer_params {
     double minvs, maxvs, minrho, maxrho, vpvsratio;
@@ -59,11 +60,11 @@ void initiate_layers(){
     }
 }
 
-void initiate_globals(){
-    initiate_layers();
-
-
-}
+//void initiate_globals(){
+//    initiate_layers();
+//
+//
+//}
 
 //LAYERS[0].minvs = 100; // minimum shear wave velocity of the quaternary sediment in meter/sec
 //LAYERS[0].maxvs = 500; // maximum shear wave velocity of the quaternary sediment in meter/sec
@@ -112,9 +113,10 @@ void initiate_globals(){
 //LAYERS[7].minrho = 3300; // density of the Mantle in kg/m3
 //LAYERS[7].maxrho = 3300;
 //LAYERS[7].vpvsratio = 1.7; // ratio between P-wave and S-wave velocity of the Mantle
-FILE* fp;
+FILE* fp_bengalbasin;
 FILE* fp_borehole;
 int DEBUG = 0;
+int DB = 2;
 
 //typedef struct loc {
 //    double laty, longx;

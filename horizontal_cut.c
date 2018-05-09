@@ -63,15 +63,48 @@ int main(){
 	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("horizontal_cut_20km_exp2000m_vs.txt", "w");
+	vsPtr = fopen("horizontal_cut_test100km_exp2000m_vs.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("horizontal_cut_20km_exp2000m_vp.txt", "w");
+	vpPtr = fopen("horizontal_cut_test100km_exp2000m_vp.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("horizontal_cut_20km_exp2000m_rho.txt", "w");
+	rhoPtr = fopen("horizontal_cut_test100km_exp2000m_rho.txt", "w");
+
+    const char * binFileNames[] = {
+        "depth_sediment.bin",
+        "depth_dupitila.bin",
+        "depth_tipam.bin",
+        "depth_bokabil.bin",
+        "depth_bhuban.bin",
+        "depth_precambrian.bin",
+        "depth_moho.bin",
+    };
+
+	int colcount = 2000*2000;
+	int rowcount = 7;
+	double **surfaces = (double **)malloc(rowcount * sizeof(double *));
+
+	for(i=0;i<rowcount;i++){
+        surfaces[i] = (double *)malloc(colcount * sizeof(double));
+	};
+
+	for(i=0;i<rowcount;i++){
+        FILE *contourFiles;
+        contourFiles = fopen(binFileNames[i], "rb");
+        if (!contourFiles)
+        {
+            printf("Unable to open binary file!");
+            return 0;
+        }
+        for(j=0;j<colcount;j++){
+            fread(&surfaces[i][j], sizeof(double), 1, contourFiles);
+        }
+        fclose(contourFiles);
+    }
+    //printf("%f\n", surfaces[0][0]);
 
 	for(i = 0; i<sizex; i++){
 		for(j = 0; j<sizey; j++){
-			getdepth(north[j], east[i], depth, &result);
+			getdepth(north[j], east[i], depth, &result, surfaces);
 			double tempvs = result.Vs;
 			double tempvp = result.Vp;
 			double temprho = result.rho;
@@ -82,9 +115,12 @@ int main(){
 			fprintf(vsPtr, "%.2f\t%.2f\t%.2f\n", x[i], y[j], tempvs);
 			fprintf(vpPtr, "%.2f\t%.2f\t%.2f\n", x[i], y[j], tempvp);
 			fprintf(rhoPtr, "%.2f\t%.2f\t%.2f\n", x[i], y[j], temprho);
+			//break;
 		}
 		printf("%d %d\n", i, sizex);
+		//break;
 	}
 	puts("done!!!!!!!!");
+	free(surfaces);
 
 }

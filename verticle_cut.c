@@ -20,10 +20,10 @@ int main(){
 
     initiate_layers();
 
-	double lat1 = 21.88;
-	double lat2 = 26.35;
-	double long1 = 86.78;
-	double long2 = 93.22;
+	double lat1 = 21.11;
+	double lat2 = 25.45;
+	double long1 = 87.63;
+	double long2 = 93.25;
 	double minlat = 19.9;
 	double minlong = 86.5;
 	double dx = 0.01;
@@ -34,8 +34,8 @@ int main(){
 	double angle;
 	double degreetodist = 111.01*1000;
 
-	double diflat  = lat2 - lat1;
-	double diflong = long2 - long1;
+	double diflat  = abs(lat2 - lat1);
+	double diflong = abs(long2 - long1);
 	//double *dist = malloc(100*sizeof(double*));
 
 	double z[ndepthpoints];
@@ -68,8 +68,18 @@ int main(){
 
 	for (i = 1; i<size; i++){
 		dist[i] = dist[i-1]+dx;
-		lattitude[i] = lat1 + dist[i]*(fabs(sin(angle)));
-		longitude[i] = long1 + dist[i]*(fabs(cos(angle)));
+		if(lat2>lat1){
+            lattitude[i] = lat1 + dist[i]*(fabs(sin(angle)));
+		}
+		else{
+            lattitude[i] = lat1 - dist[i]*(fabs(sin(angle)));
+		}
+		if(long2>long1){
+            longitude[i] = long1 + dist[i]*(fabs(cos(angle)));
+		}
+		else{
+            longitude[i] = long1 - dist[i]*(fabs(cos(angle)));
+		}
 	}
 	// converting longitude and latitude to meters
 	for(i=0;i<size;i++){
@@ -82,11 +92,11 @@ int main(){
 	}
 
 	FILE * vsPtr;
-	vsPtr = fopen("vertical_cut_along20km_expSE-NW_vs.txt", "w");
+	vsPtr = fopen("vertical_cut_along50km_exp0.5SW-NE_vs.txt", "w");
 	FILE * vpPtr;
-	vpPtr = fopen("vertical_cut_along20km_expSE-NW_vp.txt", "w");
+	vpPtr = fopen("vertical_cut_along50km_exp0.5SW-NE_vp.txt", "w");
 	FILE * rhoPtr;
-	rhoPtr = fopen("vertical_cut_along20km_expSE-NW_rho.txt", "w");
+	rhoPtr = fopen("vertical_cut_along50km_exp0.5SW-NE_rho.txt", "w");
 	cvmpayload_t result;
 	//FILE *fp;
 	//fp=fopen("/Users/monsurul/Documents/uofm/Desktop/qualifying_phd/velocity model/depth.bin","rb");
