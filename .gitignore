@@ -6,3 +6,5 @@ obj/*
 *.o
 .vs/*
 *.txt
+*.gch
+Makefile
