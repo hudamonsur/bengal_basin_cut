@@ -12,7 +12,7 @@ cvmpayload_t getlayervalues(layer_params layer, double depth, double maxdepth, d
 double * getboreholevalues(double inputlat, double inputlong, double depth);
 cvmpayload_t getsurfacevalues(double dlat, double dlong, double diflat, double diflong, double inputlat, double inputlong, double depth, double ** surfaces);
 double getsurfacedepth(double dlat, double dlong, double diflong, double diflat, double east, double north, double ** surfaces, int i);
-cvmpayload_t getbhvalues(char* bhname, double depth, double confidence);
+cvmpayload_t getbhvalues(int id, double depth, double confidence);
 double sum_array(double array[], int size);
 cvmpayload_t computefinalvalues(cvmpayload_t bh_params, cvmpayload_t surface_params, double bh_confidence);
 double getbhconfidence(double bh_dist);
@@ -419,47 +419,54 @@ double * getboreholevalues(double inputlat, double inputlong, double depth){
     double vs = 0;
     double vp = 0;
     double density = 0;
-	char ** bh_names = (char**) malloc(4000 * sizeof(char*));
+//	char ** bh_names = (char**) malloc(4000 * sizeof(char*));
 	int bhnumbers = 0;
-    int linecount = 0;
+//    int linecount = 0;
 	//int ch = 0;
 //	if (DEBUG==1){
 //        puts("<<<<<<<<<<<<<< opening borehole list >>>>>>>>>>>>>>>>>>>");
 //	};
-	fp_bengalbasin = fopen(BHNAMES_LIST,"r");
+//	fp_bengalbasin = fopen(BHNAMES_LIST,"r");
+//
+//	if (!fp_bengalbasin)
+//	{
+//		printf("Unable to open borehole list!");
+//		return 0;
+//	}
+//	else {
+		int i;
+		for(i=0;i<55;i++){
 
-	if (!fp_bengalbasin)
-	{
-		printf("Unable to open borehole list!");
-		return 0;
-	}
-	else {
-		while(!feof(fp_bengalbasin)) {
-			char str[60];
-			if( fgets (str, 60, fp_bengalbasin)!=NULL ) {
-            /* writing content to stdout */
-                if(str[0]=='\n'){
-                    linecount++;
-                }
-                char *borehole_name = strtok(str, " ");
-                char *borehole_lat = strtok(NULL, " ");
-                char *borehole_long = strtok(NULL, " ");
+		//while(!feof(fp_bengalbasin)) {
+//			char str[60];
+//			if( fgets (str, 60, fp_bengalbasin)!=NULL ) {
+//            /* writing content to stdout */
+//                if(str[0]=='\n'){
+//                    linecount++;
+//                }
+//                char *borehole_name = strtok(str, " ");
+//                char *borehole_lat = strtok(NULL, " ");
+//                char *borehole_long = strtok(NULL, " ");
 //                puts(borehole_name);
 //                puts(boreholeinfo[1]);
-                double borehole_latf =  atof(borehole_lat);
-                double borehole_longf =  atof(borehole_long);
+
+                //puts(BOREHOLE_INFO[i].name);
+                char * borehole_name = (char*) malloc(60 * sizeof(char));
+                strcpy(borehole_name,BOREHOLE_INFO[i].name);
+                double borehole_latf =  BOREHOLE_INFO[i].lattitude;
+                double borehole_longf =  BOREHOLE_INFO[i].longitude;
                 double borehole_dist = (sqrt(pow((borehole_latf-inputlat),2) + pow((borehole_longf-inputlong),2)))*111.01;
                 //double dist_lim = 100;
-
                 if(borehole_dist<BH_INFLUENCE){
                     double borehole_confidence = getbhconfidence(borehole_dist);
-                    char str1[] = ".txt";
-                    char * selected_borehole = (char*) malloc(60 * sizeof(char));
-                    strcpy(selected_borehole, borehole_name);
-                    strcat(selected_borehole, str1);
-//                    puts(selected_borehole);
-                    cvmpayload_t bh_values = getbhvalues(selected_borehole, depth, borehole_confidence);
-                    bh_names[bhnumbers] = selected_borehole;
+//                    char str1[] = ".txt";
+//                    char * selected_borehole = (char*) malloc(60 * sizeof(char));
+//                    strcpy(selected_borehole, borehole_name);
+//                    strcat(selected_borehole, str1);
+                    //puts(selected_borehole);
+                    cvmpayload_t bh_values = getbhvalues(i, depth, borehole_confidence);
+                    //printf("<%d>\n",i);
+//                    bh_names[bhnumbers] = selected_borehole;
                     //strcpy(n1[bhnumbers], selected_borehole);
                     bh_confidence_all[bhnumbers] = borehole_confidence;
                     bh_rho[bhnumbers] = bh_values.rho;
@@ -467,16 +474,17 @@ double * getboreholevalues(double inputlat, double inputlong, double depth){
                     bh_vs[bhnumbers] = bh_values.Vs;
                     //printf("%d %s\n",bhnumbers,bh_names[bhnumbers]);
                     bhnumbers++;
-                    free(selected_borehole);
+//                    free(selected_borehole);
 //                    puts(selected_borehole);
 
                 }
+                free(borehole_name);
 
-            }
+//            }
 
 		}
-	}
-	fclose(fp_bengalbasin);
+//	}
+//	fclose(fp_bengalbasin);
 	//printf("%s %d\n", "number of boreholes:", bhnumbers);
 	if(bhnumbers>0){
         vs = sum_array(bh_vs,bhnumbers)/sum_array(bh_confidence_all,bhnumbers);
@@ -499,7 +507,7 @@ double * getboreholevalues(double inputlat, double inputlong, double depth){
 	result[3] = density;
 	//puts("<<<<<<<<borehole values calculated>>>>>>");
 
-	free(bh_names);
+//	free(bh_names);
 	return result;
 }
 
@@ -525,7 +533,7 @@ double sum_array(double array[], int size){
 
 }
 
-cvmpayload_t getbhvalues(char* bhname, double depth, double confidence){
+cvmpayload_t getbhvalues(int id, double depth, double confidence){
 
     cvmpayload_t result;
     cvmpayload_t tmp_result;
@@ -535,7 +543,9 @@ cvmpayload_t getbhvalues(char* bhname, double depth, double confidence){
 //    if (DEBUG==1){
 //        puts("<<<<<<<<<<<<<< opening borehole file >>>>>>>>>>>>>>>>>>>");
 //	};
-    fp_borehole = fopen(bhname,"r");
+//    fp_borehole = fopen(bhname,"r");
+    rewind(BOREHOLE_INFO[id].fp);
+    fp_borehole = BOREHOLE_INFO[id].fp;
     if(!fp_borehole){
         printf("Borehole file does not exist!");
     }
@@ -556,7 +566,7 @@ cvmpayload_t getbhvalues(char* bhname, double depth, double confidence){
                }
         }
     }
-    fclose(fp_borehole);
+//    fclose(fp_borehole);
     //printf("%s %d\n", "number of layers in the borehole file:", layercount);
     int i = 1;
     int lr_id=0;

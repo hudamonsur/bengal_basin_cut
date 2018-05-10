@@ -20,6 +20,13 @@ typedef struct layer_params {
     double minvs, maxvs, minrho, maxrho, vpvsratio;
 } layer_params;
 
+typedef struct boreholes {
+    char * name;
+    double lattitude;
+    double longitude;
+    FILE * fp;
+} boreholes;
+
 const char * LAYER_NAMES[] = {
     "sediment",
     "dupitila",
@@ -60,11 +67,53 @@ void initiate_layers(){
     }
 }
 
-//void initiate_globals(){
-//    initiate_layers();
-//
-//
-//}
+boreholes BOREHOLE_INFO[56];
+void initiate_boreholes(){
+    FILE * fp_bengalbasin;
+    fp_bengalbasin = fopen(BHNAMES_LIST,"r");
+    int i=0;
+    if (!fp_bengalbasin)
+	{
+		printf("Unable to open borehole list!");
+		return 0;
+	}
+	else {
+		while(!feof(fp_bengalbasin)) {
+			char str[60];
+			if( fgets (str, 60, fp_bengalbasin)!=NULL ) {
+            /* writing content to stdout */
+//                if(str[0]=='\n'){
+//                    linecount++;
+//                }
+                char *borehole_name = strtok(str, " ");
+                char *borehole_lat = strtok(NULL, " ");
+                char *borehole_long = strtok(NULL, " ");
+//                puts(borehole_name);
+//                puts(boreholeinfo[1]);
+                double borehole_latf =  atof(borehole_lat);
+                double borehole_longf =  atof(borehole_long);
+
+                BOREHOLE_INFO[i].name = (char*) malloc(60 * sizeof(char));
+                strcpy(BOREHOLE_INFO[i].name, borehole_name);
+                BOREHOLE_INFO[i].lattitude = borehole_latf;
+                BOREHOLE_INFO[i].longitude = borehole_longf;
+
+                char str1[] = ".txt";
+                strcat(borehole_name, str1);
+                BOREHOLE_INFO[i].fp = fopen(borehole_name,"r");
+                i++;
+			}
+		}
+	}
+	fclose(fp_bengalbasin);
+
+}
+void initiate_globals(){
+    initiate_layers();
+    initiate_boreholes();
+
+
+}
 
 //LAYERS[0].minvs = 100; // minimum shear wave velocity of the quaternary sediment in meter/sec
 //LAYERS[0].maxvs = 500; // maximum shear wave velocity of the quaternary sediment in meter/sec

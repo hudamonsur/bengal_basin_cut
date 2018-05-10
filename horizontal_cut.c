@@ -15,7 +15,8 @@
 // the program generates an array of values of material properties at a certain depth
 
 int main(){
-    initiate_layers();
+    //initiate_layers();
+    initiate_globals();
 
 	double lat1 = 19.9;
 	double lat2 = 27;
