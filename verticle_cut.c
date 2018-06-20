@@ -18,7 +18,7 @@
 
 int main(){
 
-    initiate_layers();
+    initiate_globals();
 
 	double lat1 = 21.11;
 	double lat2 = 25.45;
@@ -27,7 +27,7 @@ int main(){
 	double minlat = 19.9;
 	double minlong = 86.5;
 	double dx = 0.01;
-	int dz = 30;
+	int dz = 5;
 	int size;
 	int maxdepth = 10000;
 	int ndepthpoints = maxdepth/dz;
@@ -90,28 +90,56 @@ int main(){
 	for(j = 0; j<size; j++){
 		dist[j] = dist[j]*111.01;
 	}
-
-	FILE * vsPtr;
-	vsPtr = fopen("vertical_cut_along50km_exp0.5SW-NE_vs.txt", "w");
-	FILE * vpPtr;
-	vpPtr = fopen("vertical_cut_along50km_exp0.5SW-NE_vp.txt", "w");
-	FILE * rhoPtr;
-	rhoPtr = fopen("vertical_cut_along50km_exp0.5SW-NE_rho.txt", "w");
-	cvmpayload_t result;
 	//FILE *fp;
 	//fp=fopen("/Users/monsurul/Documents/uofm/Desktop/qualifying_phd/velocity model/depth.bin","rb");
+
+    const char * binFileNames[] = {
+        "depth_sediment.bin",
+        "depth_dupitila.bin",
+        "depth_tipam.bin",
+        "depth_bokabil.bin",
+        "depth_bhuban.bin",
+        "depth_precambrian.bin",
+        "depth_moho.bin",
+    };
+
+	int colcount = 2000*2000;
+	int rowcount = 7;
+	double **surfaces = (double **)malloc(rowcount * sizeof(double *));
+
+	for(i=0;i<rowcount;i++){
+        surfaces[i] = (double *)malloc(colcount * sizeof(double));
+	};
+
+	for(i=0;i<rowcount;i++){
+        FILE *contourFiles;
+        contourFiles = fopen(binFileNames[i], "rb");
+        if (!contourFiles)
+        {
+            printf("Unable to open binary file!");
+            return 0;
+        }
+        for(j=0;j<colcount;j++){
+            fread(&surfaces[i][j], sizeof(double), 1, contourFiles);
+        }
+        fclose(contourFiles);
+    }
+
+	FILE * vsPtr;
+	vsPtr = fopen("vertical_cut_along20km_exp_nSW-NE_vs.txt", "w");
+	FILE * vpPtr;
+	vpPtr = fopen("vertical_cut_along20km_exp_nSW-NE_vp.txt", "w");
+	FILE * rhoPtr;
+	rhoPtr = fopen("vertical_cut_along20km_exp_nSW-NE_rho.txt", "w");
+	cvmpayload_t result;
 
 	for(i = 0; i<(ndepthpoints); i++){
 		for(j = 0; j<(size); j++){
             //printf("%d>>>>1\n",j);
-			getdepth(north[j], east[j], z[i], &result);
+			getdepth(north[j], east[j], z[i], &result, surfaces);
 			double tempvs = result.Vs;
 			double tempvp = result.Vp;
 			double temprho = result.rho;
-			/* in *(result+0),
-			0 means shear wave velocity;
-			1 means p-wave velocity and
-			2 means density*/
 			//printf("%d>>>>2\n",j);
 			fprintf( vsPtr, "%.4f\t%.0f\t%.2f\n", dist[j], z[i], tempvs );
 			fprintf( vpPtr, "%.4f\t%.0f\t%.2f\n", dist[j], z[i], tempvp );
@@ -123,6 +151,7 @@ int main(){
 	}
 	//printf("%f\n",longitude[35]);
 
+	free(surfaces);
 	puts("done!!!!!!!!");
 
 }

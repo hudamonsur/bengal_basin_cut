@@ -13,13 +13,13 @@
 
 int main(){
 
-	initiate_layers();
+	initiate_globals();
 
 	cvmpayload_t result;
 	double minlat = 19.9;
 	double minlong = 86.5;
-	double lattitude = 24.915;
-	double longitude = 92.3374;
+	double lattitude = 25.57777778;
+	double longitude = 89.0675;
 	double degreetodist = 111.01*1000;
 	double north = (lattitude-minlat)*degreetodist;
 	double east = (longitude-minlong)*degreetodist;
@@ -60,7 +60,7 @@ int main(){
 //        printf("%f\n",surfaces[2000][i]);
 //	}
 
-	double z = 0;
+	double z = 160;
 	getdepth(north, east, z, &result, surfaces);
 	free(surfaces);
 	double vs = result.Vs;

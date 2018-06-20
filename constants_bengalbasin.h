@@ -13,7 +13,7 @@ double DEGREETODIST = 111.01*1000; // degree to distance multiplier in meters
 
 //double SEDIMENTDEPTH = 100; // fixed sediment depth assumed for the model in meters
 double APPROXCRUSTTHICKNESS = 20000; // average approximated crustal thickness
-int BH_INFLUENCE = 100; // borehole influence distance.
+int BH_INFLUENCE = 5; // borehole influence distance.
 char BHNAMES_LIST[] = "borehole_list.txt";
 
 typedef struct layer_params {
@@ -24,18 +24,18 @@ typedef struct boreholes {
     char * name;
     double lattitude;
     double longitude;
-    FILE * fp;
+    FILE * bh;
 } boreholes;
 
-const char * LAYER_NAMES[] = {
-    "sediment",
-    "dupitila",
-    "tipam",
-    "bokabil",
-    "bhuban",
-    "premiocene",
-    "precambrian",
-    "mantle",
+int LAYER_NAMES[] = {
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
 };
 
 const char * BIN_NAMES[] = {
@@ -50,12 +50,11 @@ const char * BIN_NAMES[] = {
 int BIN_COUNT = 7;
 int LAYER_COUNT = 8;
 layer_params LAYERS[8];
-double LAYER_MINVS[] = {100, 750, 1050, 1250, 1700, 2250, 3250, 4500};
-double LAYER_MAXVS[] = {500, 1000, 1100, 1650, 2200, 2400, 3500, 6000};
+double LAYER_MINVS[] = {100, 700, 1000, 1300, 1700, 2200, 3250, 4500};
+double LAYER_MAXVS[] = {500, 1000, 1300, 1700, 2200, 2400, 3500, 6000};
 double LAYER_MINRHO[] = {2000, 2100, 2200, 2350, 2450, 2550, 2670, 3300};
 double LAYER_MAXRHO[] = {2050, 2200, 2350, 2450, 2550, 2600, 2800, 3300};
 double LAYER_VPVSRATIO[] = {2.2, 2.1, 2.1, 2.0, 2.0, 1.9, 1.8, 1.7};
-
 void initiate_layers(){
     int i = 0;
     for(i=0;i<LAYER_COUNT;i++){
@@ -67,11 +66,11 @@ void initiate_layers(){
     }
 }
 
-boreholes BOREHOLE_INFO[56];
+boreholes BOREHOLE_INFO[55];
 void initiate_boreholes(){
     FILE * fp_bengalbasin;
     fp_bengalbasin = fopen(BHNAMES_LIST,"r");
-    int i=0;
+    int k=0;
     if (!fp_bengalbasin)
 	{
 		printf("Unable to open borehole list!");
@@ -93,15 +92,15 @@ void initiate_boreholes(){
                 double borehole_latf =  atof(borehole_lat);
                 double borehole_longf =  atof(borehole_long);
 
-                BOREHOLE_INFO[i].name = (char*) malloc(60 * sizeof(char));
-                strcpy(BOREHOLE_INFO[i].name, borehole_name);
-                BOREHOLE_INFO[i].lattitude = borehole_latf;
-                BOREHOLE_INFO[i].longitude = borehole_longf;
+                BOREHOLE_INFO[k].name = (char*) malloc(60 * sizeof(char));
+                strcpy(BOREHOLE_INFO[k].name, borehole_name);
+                BOREHOLE_INFO[k].lattitude = borehole_latf;
+                BOREHOLE_INFO[k].longitude = borehole_longf;
 
                 char str1[] = ".txt";
                 strcat(borehole_name, str1);
-                BOREHOLE_INFO[i].fp = fopen(borehole_name,"r");
-                i++;
+                BOREHOLE_INFO[k].bh = fopen(borehole_name,"r");
+                k++;
 			}
 		}
 	}
